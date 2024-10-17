@@ -1,6 +1,6 @@
 ;CRC-32 Verification
 section .data
-    KERNEL_SIZE equ 0x16C8
+    KERNEL_SIZE equ 5828
 
 section .bss
     kernel_checksum_file_buffer resd 0x01
@@ -21,7 +21,7 @@ calc_kernel_checksum:
 
 compare_checksums:
     mov edx, [kernel_checksum_calc_result]
-    mov ecx, 0x26422D63
+    mov ecx, 0xc0ce2b76
 
     cmp edx, ecx
     jne print_not_match
