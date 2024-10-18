@@ -70,7 +70,7 @@ CLEAN_BUILD3 = *.o
 all: $(DISK_IMG)
 
 # Compile Disk Image
-$(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE)
+$(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) #$(PREBOOT_CRC32_EXE)
 	@echo "Building $(DISK_IMG)..."
 	dd if=$(BOOTSEC_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(COUNT) conv=$(CONV)
 
@@ -78,14 +78,17 @@ $(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE)
 	$(eval LOADER_COUNT := $(shell echo $$((($(LOADER_SIZE) + $(SECTOR_SIZE) - 1) / $(SECTOR_SIZE)))))
 	dd if=$(LOADER_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(LOADER_COUNT) seek=$(STAGE2_SEEK) conv=$(CONV)
 
+
 	$(eval KERNEL_SEEK := $(shell echo $$(((`stat -c%s $(LOADER_BIN)` + $(SECTOR_SIZE) - 1) / $(SECTOR_SIZE) + 1))))
 	$(eval KERNEL_SIZE := $(shell stat -c%s $(KERNEL_BIN)))
 	$(eval KERNEL_COUNT := $(shell echo $$((($(KERNEL_SIZE) + $(SECTOR_SIZE) - 1) / $(SECTOR_SIZE)))))
+
 	dd if=$(KERNEL_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(KERNEL_COUNT) seek=$(KERNEL_SEEK) conv=$(CONV)
 
+	# $(eval CHECKSUM_SEEK := $(shell echo $$((($(KERNEL_SIZE) + $(LOADER_SIZE) + 512)))))
+	# dd if=build/boot/stage2/crc32/preboot_crc32_result.bin of=$(DISK_IMG) bs=1 seek=$(CHECKSUM_SEEK) count=4 conv=notrunc
 
 #BOOT=COMPILATION===============================================================
-
 
 # Compile bootsec.bin
 $(BOOTSEC_BIN): $(BOOTSEC_SRC) $(PRINT16_SRC)

@@ -10,13 +10,15 @@ load_pm:
 
     call print_kernel_exe_msg
 
+    cli 
+
     lgdt [GDT_DESC]
     
     mov eax, cr0
     or eax, 0x01                 
-    ;mov cr0, eax                
+    mov cr0, eax                
 
-    jmp CODE_SEG:PModeMain       
+    jmp CODE_SEG:PModeMain     
 
 [BITS 32]     
 PModeMain:
@@ -27,8 +29,7 @@ PModeMain:
     mov fs, ax                      
     mov gs, ax                      
 
-    mov ebp, 0x9C00
-    mov esp, ebp
+    mov esp, 0x9C00
     
     jmp CODE_SEG:KERNEL_START_ADDR
 

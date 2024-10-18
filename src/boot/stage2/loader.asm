@@ -1,20 +1,18 @@
 ;Main loader
-[ORG 0x8000]
+[ORG 0x7E00]
 [BITS 16]
 
 section .data
-    KERNEL_LOAD_SEG equ 0x1000
+    KERNEL_LOAD_SEG     equ 0x1000
+    KERNEL_START_SECTOR equ 0x07
+    KERNEL_SECTORS      equ 0x0C
 
 section .text
     global _start
 
 _start: 
-    mov ax, 0x8000
+    mov ax, 0x7E00
     mov ds, ax
-    mov ss, ax
-    mov es, ax
-
-    mov sp, 0x7FFF 
 
     call print_press_key
 
@@ -48,14 +46,15 @@ read_kernel:
     mov dl, 0x80                    
     mov dh, 0x00                    
     mov ch, 0x00                    
-    mov cl, 0x07                    
-    mov al, 0x0C                   
+    mov cl, KERNEL_START_SECTOR                    
+    mov al, KERNEL_SECTORS                   
                                  
     mov bx, read_kernel_buffer                             
 
     int 0x13                        
     
-    jc print_disk_error             
+    jc print_disk_error 
+               
     ret
 
 load_kernel:
@@ -65,16 +64,17 @@ load_kernel:
     mov dl, 0x80                    
     mov dh, 0x00                    
     mov ch, 0x00                    
-    mov cl, 0x07                    
-    mov al, 0x0C                   
-    
-    mov bx,  KERNEL_LOAD_SEG
-    mov es, bx                            
+    mov cl, KERNEL_START_SECTOR                    
+    mov al, KERNEL_SECTORS                   
+                                 
+    mov bx, KERNEL_LOAD_SEG                             
 
     int 0x13                        
     
-    jc print_disk_error             
+    jc print_disk_error 
+               
     ret
+
 
 print_press_key:
     mov si, press_load_kernel
@@ -104,7 +104,7 @@ print_disk_error:
 
 
 press_load_kernel   db "Press 'Enter' to Advance System Initialization..."       , 0x0D, 0x0A, 0x0D, 0x0A, 0
-read_kernel_message db "[+] Accessing Kernel on disk for integrity check..."     , 0x0D, 0x0A, 0x0D, 0x0A, 0
+read_kernel_message db "[+] Accessing Kernel on disk for Integrity Check..."     , 0x0D, 0x0A, 0x0D, 0x0A, 0
 load_kernel_message db "[+] Loading Kernel to RAM..."                            , 0x0D, 0x0A, 0x0D, 0x0A, 0
 checksum_start_msg  db "[+] Initiating Kernel CRC-32 Checksums Verification..."  , 0x0D, 0x0A, 0x0D, 0x0A, 0
 disk_error_message  db "[-] Error: Reading Disk!"                                , 0x0D, 0x0A, 0x0D, 0x0A, 0
@@ -114,4 +114,4 @@ disk_error_message  db "[-] Error: Reading Disk!"                               
 %include "src/boot/stage2/include/initpm.asm"
 %include "src/boot/print16.asm"
 
-times 1536-($-$$) db 0x0
+times 1534-($-$$) db 0x0
