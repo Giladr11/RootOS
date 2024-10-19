@@ -19,11 +19,13 @@ initA20:
 A20_enable_msg:    
     mov si, enable_messsage
     call print
+
     ret
 
 A20_success_msg:    
     mov si, success_message
     call print
+
     ret
 
 A20_failed:
@@ -35,7 +37,7 @@ A20_failed:
 
 enable_messsage db "[+] Enabling A20 Line..."                , 0x0D, 0x0A, 0x0D, 0x0A, 0
 success_message db "[+] Successfully Enabled A20 Line..."    , 0x0D, 0x0A, 0x0D, 0x0A, 0
-error_messsage  db "[-] Error: Failed to Enable A20 Line!"   , 0x0D, 0x0A, 0x0D, 0x0A, 0
+error_messsage  db "[-][ERROR]: Failed to Enable A20 Line!"  , 0x0D, 0x0A, 0x0D, 0x0A, 0
 
 
 %include "src/boot/print16.asm"

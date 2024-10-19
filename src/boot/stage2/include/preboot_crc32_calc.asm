@@ -36,9 +36,11 @@ read_kernel:
     ;mov bx, read_kernel_buffer  
 
     int 0x13                        
+    
     ret
 
 write_sectors:
+    
     ret
 
 %include "src/boot/stage2/include/crc32.asm"

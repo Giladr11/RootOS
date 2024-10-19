@@ -67,21 +67,25 @@ LoadStage2:
 print_boot_msg:
     mov si, init_boot_message
     call print
+    
     ret
 
 print_press_key:
     mov si, press_load_stage2
     call print
+    
     ret
 
 print_stage2_msg:
     mov si, stage2_message
     call print
+    
     ret
 
 print_execute_stage2:
     mov si, stage2_execute
     call print
+
     ret
 
 print_disk_error:
@@ -95,7 +99,7 @@ init_boot_message  db "[+] Initializing Booting Process..."     , 0x0D, 0x0A, 0x
 press_load_stage2  db "[INFO] Press 'Enter' to Load Stage 2..." , 0x0D, 0x0A, 0x0D, 0x0A, 0
 stage2_message     db "[+] Loading Stage 2..."                  , 0x0D, 0x0A, 0x0D, 0x0A, 0 
 stage2_execute     db "[+] Executing Stage 2..."                , 0x0D, 0x0A, 0x0D, 0x0A, 0 
-disk_error_message db "[-] Error: Reading Disk!"                , 0x0D, 0x0A, 0x0D, 0x0A, 0
+disk_error_message db "[-][ERROR]: Reading Disk!"               , 0x0D, 0x0A, 0x0D, 0x0A, 0
 
 
 %include "src/boot/print16.asm"

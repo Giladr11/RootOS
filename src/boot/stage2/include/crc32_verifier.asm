@@ -39,10 +39,11 @@ print_not_match:
 print_match:
     mov si, checksums_match
     call print
+
     ret
 
 
-checksums_not_match db "[-] Error: Kernel CRC-32 Checksums Do not Match!" , 0x0D, 0x0A, 0x0D, 0x0A, 0
+checksums_not_match db "[-][ERROR]: Kernel CRC-32 Checksums Do not Match!", 0x0D, 0x0A, 0x0D, 0x0A, 0
 checksums_match     db "[+] Kernel CRC-32 Verificitation has Completed!"  , 0x0D, 0x0A, 0x0D, 0x0A, 0
 
 
