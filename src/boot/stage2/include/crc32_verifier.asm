@@ -1,4 +1,4 @@
-;CRC-32 Verification
+;CRC-32 Verifications
 section .data
     KERNEL_SIZE equ 5828
 
