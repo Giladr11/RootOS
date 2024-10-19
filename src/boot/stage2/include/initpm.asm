@@ -6,9 +6,9 @@ KERNEL_START_ADDR equ 0x100000
 LoadPM:    
     call initA20
 
-    call print_pm_msg
-
     call print_setting_gdt
+
+    call print_pm_msg
 
     call print_kernel_exe_msg
 
@@ -40,14 +40,14 @@ PModeMain:
     jmp CODE_SEG:KERNEL_START_ADDR
 
 [BITS 16]
-print_pm_msg:
-    mov si, protected_mode_message
+print_setting_gdt:
+    mov si,setting_gdt_message
     call print
 
     ret
 
-print_setting_gdt:
-    mov si,setting_gdt_message
+print_pm_msg:
+    mov si, protected_mode_message
     call print
 
     ret

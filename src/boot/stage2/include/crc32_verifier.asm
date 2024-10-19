@@ -43,8 +43,8 @@ print_match:
     ret
 
 
-checksums_not_match db "[-][ERROR]: Kernel CRC-32 Checksums Do not Match!", 0x0D, 0x0A, 0x0D, 0x0A, 0
-checksums_match     db "[+] Kernel CRC-32 Verificitation has Completed!"  , 0x0D, 0x0A, 0x0D, 0x0A, 0
+checksums_not_match db "[-][ERROR]: Kernel CRC-32 Checksums Do not Match!"     , 0x0D, 0x0A, 0x0D, 0x0A, 0
+checksums_match     db "[+] Kernel CRC-32 Verificitation has been Completed!"  , 0x0D, 0x0A, 0x0D, 0x0A, 0
 
 
 %include "src/boot/stage2/include/crc32.asm"

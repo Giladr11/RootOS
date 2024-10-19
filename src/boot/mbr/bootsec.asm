@@ -95,11 +95,11 @@ print_disk_error:
     jmp $                         
 
 
-init_boot_message  db "[BOOT] Initializing Booting Process..."  , 0x0D, 0x0A, 0x0D, 0x0A, 0
-press_load_stage2  db "[INFO] Press 'Enter' to Load Stage 2..." , 0x0D, 0x0A, 0x0D, 0x0A, 0
-stage2_message     db "[+] Loading Stage 2..."                  , 0x0D, 0x0A, 0x0D, 0x0A, 0 
-stage2_execute     db "[+] Executing Stage 2..."                , 0x0D, 0x0A, 0x0D, 0x0A, 0 
-disk_error_message db "[-][ERROR]: Reading Disk!"               , 0x0D, 0x0A, 0x0D, 0x0A, 0
+init_boot_message  db "[BOOT] Initializing Booting Process..."   , 0x0D, 0x0A, 0x0D, 0x0A, 0
+press_load_stage2  db "[INFO] Press 'Enter' to Load Stage 2..."  , 0x0D, 0x0A, 0x0D, 0x0A, 0
+stage2_message     db "[+] Loading Stage 2..."                   , 0x0D, 0x0A, 0x0D, 0x0A, 0 
+stage2_execute     db "[+] Executing Stage 2..."                 , 0x0D, 0x0A, 0x0D, 0x0A, 0 
+disk_error_message db "[-][ERROR]: Reading Disk!"                , 0x0D, 0x0A, 0x0D, 0x0A, 0
 
 
 %include "src/boot/print16.asm"
