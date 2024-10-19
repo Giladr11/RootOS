@@ -1,9 +1,10 @@
 ; Pre-Boot CRC-32 Calculation
 
+
 section .data
     KERNEL_SECTOR           equ 0x07
     KERNEL_SECTOR_COUNT     equ 0x0C
-    KERNEL_SIZE             equ 5824  
+    KERNEL_SIZE             equ 5828  
 
 section .bss
     read_kernel_buffer resb KERNEL_SIZE  
@@ -32,7 +33,7 @@ read_kernel:
     mov cl, KERNEL_SECTOR           
     mov al, KERNEL_SECTOR_COUNT     
  
-    mov bx, read_kernel_buffer  
+    ;mov bx, read_kernel_buffer  
 
     int 0x13                        
     ret

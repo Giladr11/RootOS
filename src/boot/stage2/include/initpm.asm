@@ -8,6 +8,8 @@ LoadPM:
 
     call print_pm_msg
 
+    call print_setting_gdt
+
     call print_kernel_exe_msg
 
     cli 
@@ -22,6 +24,10 @@ LoadPM:
 
 [BITS 32]     
 PModeMain:
+    mov eax, cr0
+    test eax, 0x1
+    jz hlting
+
     mov ax, DATA_SEG                
     mov ds, ax                      
     mov es, ax                      
@@ -37,15 +43,26 @@ PModeMain:
 print_pm_msg:
     mov si, protected_mode_message
     call print
+
+    ret
+
+print_setting_gdt:
+    mov si,setting_gdt_message
+    call print
+
     ret
 
 print_kernel_exe_msg:
     mov si, kernel_execution_message
     call print
+
     ret
 
+hlting:
+    hlt
 
 protected_mode_message   db "[+] Transitioning into Protected Mode..." , 0x0D, 0x0A, 0x0D, 0x0A, 0
+setting_gdt_message      db "[+] Setting Up GDT..."                    , 0x0D, 0x0A, 0x0D, 0x0A, 0
 kernel_execution_message db "[+] Initiating Kernel Execution..."       , 0x0D, 0x0A, 0x0D, 0x0A, 0
 
 

@@ -102,7 +102,7 @@ print_disk_error:
     jmp $                        
 
 
-press_load_kernel   db "Press 'Enter' to Advance System Initialization..."       , 0x0D, 0x0A, 0x0D, 0x0A, 0
+press_load_kernel   db "[INFO] Press 'Enter' to Advance System Initialization...", 0x0D, 0x0A, 0x0D, 0x0A, 0
 read_kernel_message db "[+] Accessing Kernel on disk for Integrity Check..."     , 0x0D, 0x0A, 0x0D, 0x0A, 0
 load_kernel_message db "[+] Loading Kernel to RAM..."                            , 0x0D, 0x0A, 0x0D, 0x0A, 0
 checksum_start_msg  db "[+] Initiating Kernel CRC-32 Checksums Verification..."  , 0x0D, 0x0A, 0x0D, 0x0A, 0
