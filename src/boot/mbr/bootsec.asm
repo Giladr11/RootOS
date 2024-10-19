@@ -27,7 +27,7 @@ _start:
 
     call wait_for_key
     
-    call load_stage2
+    call LoadStage2
 
     call print_execute_stage2
 
@@ -42,7 +42,7 @@ wait_for_key:
 
     ret
 
-load_stage2:
+LoadStage2:
     call print_stage2_msg
 
     mov si, Stage2Packet  

@@ -9,7 +9,7 @@ section .bss
 
 
 section .text
-calc_kernel_checksum:
+CalcKernelChecksum:
     mov esi, read_kernel_buffer
     mov ecx, KERNEL_SIZE
     
@@ -19,7 +19,7 @@ calc_kernel_checksum:
 
     ret
 
-compare_checksums:
+CompareChecksums:
     mov edx, [kernel_checksum_calc_result]
     mov ecx, 0xc0ce2b76
 

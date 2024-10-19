@@ -18,17 +18,17 @@ _start:
 
     call wait_for_key
 
-    call read_kernel
+    call ReadKernel
     
     call print_start_checksum_message
 
-    call calc_kernel_checksum
+    call CalcKernelChecksum
 
-    call compare_checksums
+    call CompareChecksums
     
-    call load_kernel
+    call LoadKernel
 
-    jmp load_pm
+    jmp LoadPM
 
 wait_for_key:
     mov ah, 0x00
@@ -39,7 +39,7 @@ wait_for_key:
 
     ret
 
-read_kernel:
+ReadKernel:
     call print_readkernel_msg
     
     mov ah, 0x02                    
@@ -57,7 +57,7 @@ read_kernel:
                
     ret
 
-load_kernel:
+LoadKernel:
     call print_loadkernel_msg
     
     mov ah, 0x02                    
@@ -74,7 +74,6 @@ load_kernel:
     jc print_disk_error 
                
     ret
-
 
 print_press_key:
     mov si, press_load_kernel

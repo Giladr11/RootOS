@@ -3,7 +3,7 @@
 
 KERNEL_START_ADDR equ 0x100000
 
-load_pm:    
+LoadPM:    
     call initA20
 
     call print_pm_msg
@@ -30,7 +30,7 @@ PModeMain:
     mov gs, ax                      
 
     mov esp, 0x9C00
-    
+
     jmp CODE_SEG:KERNEL_START_ADDR
 
 [BITS 16]
