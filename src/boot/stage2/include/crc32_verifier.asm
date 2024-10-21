@@ -3,8 +3,8 @@ section .data
     KERNEL_SIZE equ 5828
 
 section .bss
-    kernel_checksum_file_buffer resd 0x01
-    kernel_checksum_calc_result resd 0x01
+    kernel_checksum_calc_buffer resd 0x01
+    kernel_checksum_read_buffer resd 0x01
     read_kernel_buffer          resb KERNEL_SIZE
 
 
@@ -15,13 +15,27 @@ CalcKernelChecksum:
     
     call _start_crc32
     
-    mov [kernel_checksum_calc_result], ebx 
+    mov [kernel_checksum_calc_buffer], ebx 
+
+    ret
+
+ReadPreBootChecksum:
+    mov ax, [0x7DFA]
+
+    xchg ah, al 
+
+    mov bx, [0x7DFC]
+
+    xchg bh, bl
+
+    mov [kernel_checksum_read_buffer], bx
+    mov [kernel_checksum_read_buffer + 2], ax
 
     ret
 
 CompareChecksums:
-    mov edx, [kernel_checksum_calc_result]
-    mov ecx, 0xc0ce2b76
+    mov edx, [kernel_checksum_calc_buffer]
+    mov ecx, [kernel_checksum_read_buffer]
 
     cmp edx, ecx
     jne print_not_match

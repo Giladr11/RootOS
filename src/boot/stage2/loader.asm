@@ -24,6 +24,8 @@ _start:
 
     call CalcKernelChecksum
 
+    call ReadPreBootChecksum
+
     call CompareChecksums
     
     call LoadKernel

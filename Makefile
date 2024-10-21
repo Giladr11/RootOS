@@ -7,6 +7,7 @@ STAGE2_DIR = stage2
 KERNEL_DIR = kernel
 OBJ_DIR = obj
 INCLUDE_DIR = include
+CRC-32_DIR = crc-32
 
 # Compilers:
 ## Boot
@@ -39,10 +40,15 @@ MAINKERNEL_C_SRC = $(SRC_DIR)/$(KERNEL_DIR)/KernelMain.c
 KERNEL_H = $(SRC_DIR)/$(KERNEL_DIR)/$(INCLUDE_DIR)/kernel.h
 
 # Disk Image Commands:
-SECTOR_SIZE = 512 	#bytes
-STAGE2_SEEK = 1		#starts at sector 2
-CONV = notrunc		#wont truncate the files
-COUNT = 1
+SECTOR_SIZE = 512  	 		# bytes
+STAGE2_SEEK = 1		 		# starts at sector 2
+CONV = notrunc		 		# wont truncate the files
+COUNT = 1            		# 1 block of 512 bytes
+
+# Checksum Disk Image Commands:
+CHECKSUM_SEEK = 506  		# right before the boot signature
+CHECKSUM_SECTOR_SIZE = 1    # 1 byte
+CHECKSUM_COUNT = 4          # 4 blocks of 1 byte
 
 # BUILD Files:
 # Boot Build Files 
@@ -52,6 +58,7 @@ BOOTSEC_BIN = $(BUILD_DIR)/$(BOOT_DIR)/$(MBR_DIR)/bootsec.bin
 LOADER_BIN = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/loader.bin
 PREBOOT_CRC32_OBJ = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/preboot_crc32_calc.o
 PREBOOT_CRC32_EXE = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/preboot_crc32_calc.exe
+PREBOOT_CRC32_RESULT = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(CRC-32_DIR)/preboot_crc32_result.bin
 ## Kernel OBJ Files
 MAINKERNEL_C_OBJ = $(BUILD_DIR)/$(KERNEL_DIR)/$(OBJ_DIR)/kernel.o
 KERNEL_ASM_OBJ = $(BUILD_DIR)/$(KERNEL_DIR)/$(OBJ_DIR)/kernel.asm.o
@@ -73,10 +80,9 @@ all: $(DISK_IMG)
 
 $(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE)
 	@echo "Building $(DISK_IMG)..."
-	dd if=$(BOOTSEC_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(COUNT) conv=$(CONV)
+	dd if=$(PREBOOT_CRC32_RESULT) of=$(BOOTSEC_BIN) bs=$(CHECKSUM_SECTOR_SIZE) seek=$(CHECKSUM_SEEK) count=$(CHECKSUM_COUNT) conv=$(CONV)
 
-	# $(eval CHECKSUM_SEEK := $(shell echo $$((($(KERNEL_SIZE) + $(LOADER_SIZE) + 512)))))
-	# dd if=build/boot/stage2/crc32/preboot_crc32_result.bin of=$(DISK_IMG) bs=1 seek=$(CHECKSUM_SEEK) count=4 conv=notrunc
+	dd if=$(BOOTSEC_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(COUNT) conv=$(CONV)
 
 	$(eval LOADER_SIZE := $(shell stat -c%s $(LOADER_BIN)))
 	$(eval LOADER_COUNT := $(shell echo $$((($(LOADER_SIZE) + $(SECTOR_SIZE) - 1) / $(SECTOR_SIZE)))))
