@@ -71,7 +71,7 @@ The project follows a structured folder architecture for better organization:
     │   ├── boot/
     │   │   ├── mbr/
     │   │   └── stage2/
-    |   |       └── crc32/
+    |   |       └── crc-32/
     |   |       └── include/
     |   |
     │   └── kernel/
