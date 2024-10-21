@@ -70,7 +70,8 @@ CLEAN_BUILD3 = *.o
 all: $(DISK_IMG)
 
 #DISK=COMPILATION===============================================================
-$(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE)
+
+$(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN)
 	@echo "Building $(DISK_IMG)..."
 	dd if=$(BOOTSEC_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(COUNT) conv=$(CONV)
 
