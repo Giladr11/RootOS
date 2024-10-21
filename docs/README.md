@@ -71,6 +71,8 @@ The project follows a structured folder architecture for better organization:
     │   ├── boot/
     │   │   ├── mbr/
     │   │   └── stage2/
+    |   |       └── crc32/
+    |   |       └── include/
     |   |
     │   └── kernel/
     │       └── obj/
@@ -96,6 +98,8 @@ The project follows a structured folder architecture for better organization:
 
 - *boot/mbr/: Binary file generated during the bootloader's Stage1 compilation.*
 - *boot/stage2/: Binary file generated during the bootloader's Stage2 compilation.*
+- *boot/stage2/crc-32: Binary file of pre-boot crc32 kernel calculation Result.*
+- *boot/stage2/include: Binary files of the pre-boot crc32 kernel calculation.*
 - *kernel/obj/: Object files generated during the kernel compilation.*
 - *kernel/: Binary file generated at the end of kernel compilations.*
 - *build/: Disk Image file generated after all of the compilations.*
