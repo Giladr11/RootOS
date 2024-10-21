@@ -85,7 +85,6 @@ $(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE)
 	$(eval KERNEL_SEEK := $(shell echo $$(((`stat -c%s $(LOADER_BIN)` + $(SECTOR_SIZE) - 1) / $(SECTOR_SIZE) + 1))))
 	$(eval KERNEL_SIZE := $(shell stat -c%s $(KERNEL_BIN)))
 	$(eval KERNEL_COUNT := $(shell echo $$((($(KERNEL_SIZE) + $(SECTOR_SIZE) - 1) / $(SECTOR_SIZE)))))
-
 	dd if=$(KERNEL_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(KERNEL_COUNT) seek=$(KERNEL_SEEK) conv=$(CONV)
 
 #BOOT=COMPILATION===============================================================
