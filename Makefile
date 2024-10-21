@@ -69,10 +69,13 @@ CLEAN_BUILD3 = *.o
 # Build disk.img
 all: $(DISK_IMG)
 
-# Compile Disk Image
+#DISK=COMPILATION===============================================================
 $(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE)
 	@echo "Building $(DISK_IMG)..."
 	dd if=$(BOOTSEC_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(COUNT) conv=$(CONV)
+
+	# $(eval CHECKSUM_SEEK := $(shell echo $$((($(KERNEL_SIZE) + $(LOADER_SIZE) + 512)))))
+	# dd if=build/boot/stage2/crc32/preboot_crc32_result.bin of=$(DISK_IMG) bs=1 seek=$(CHECKSUM_SEEK) count=4 conv=notrunc
 
 	$(eval LOADER_SIZE := $(shell stat -c%s $(LOADER_BIN)))
 	$(eval LOADER_COUNT := $(shell echo $$((($(LOADER_SIZE) + $(SECTOR_SIZE) - 1) / $(SECTOR_SIZE)))))
@@ -84,9 +87,6 @@ $(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE)
 	$(eval KERNEL_COUNT := $(shell echo $$((($(KERNEL_SIZE) + $(SECTOR_SIZE) - 1) / $(SECTOR_SIZE)))))
 
 	dd if=$(KERNEL_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(KERNEL_COUNT) seek=$(KERNEL_SEEK) conv=$(CONV)
-
-	# $(eval CHECKSUM_SEEK := $(shell echo $$((($(KERNEL_SIZE) + $(LOADER_SIZE) + 512)))))
-	# dd if=build/boot/stage2/crc32/preboot_crc32_result.bin of=$(DISK_IMG) bs=1 seek=$(CHECKSUM_SEEK) count=4 conv=notrunc
 
 #BOOT=COMPILATION===============================================================
 
@@ -109,8 +109,7 @@ $(PREBOOT_CRC32_OBJ): $(PREBOOT_CRC32_SRC)
 	$(NASM_CMD) -f elf32 -g $(PREBOOT_CRC32_SRC) -o $(PREBOOT_CRC32_OBJ)
 
 
-#KERNEL=COMPILATION===============================================================
-
+#KERNEL=COMPILATION=============================================================
 
 # Compiling Final kernel.bin
 $(KERNEL_BIN): $(SCRIPT_LINKER) $(LINKED_KERNEL_OBJ)
