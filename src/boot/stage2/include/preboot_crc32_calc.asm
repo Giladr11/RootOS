@@ -1,7 +1,7 @@
 section .data
     KERNEL_SIZE equ 5828
     STDOUT_RESULT_SIZE equ 0x0A    
-                     
+
     kernel_filename db  "build/kernel/kernel.bin", 0
     file_desc dd 0
 
@@ -49,7 +49,7 @@ OpenKernel:
 
 ReadKernel:
     mov eax, 0x03                   
-    mov ebx, [file_desc]            
+    mov ebx, [file_desc]             
     mov ecx, kernel_buffer          
     mov edx, KERNEL_SIZE   
 
