@@ -71,7 +71,7 @@ all: $(DISK_IMG)
 
 #DISK=COMPILATION===============================================================
 
-$(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN)
+$(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE)
 	@echo "Building $(DISK_IMG)..."
 	dd if=$(BOOTSEC_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(COUNT) conv=$(CONV)
 
@@ -81,7 +81,6 @@ $(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN)
 	$(eval LOADER_SIZE := $(shell stat -c%s $(LOADER_BIN)))
 	$(eval LOADER_COUNT := $(shell echo $$((($(LOADER_SIZE) + $(SECTOR_SIZE) - 1) / $(SECTOR_SIZE)))))
 	dd if=$(LOADER_BIN) of=$(DISK_IMG) bs=$(SECTOR_SIZE) count=$(LOADER_COUNT) seek=$(STAGE2_SEEK) conv=$(CONV)
-
 
 	$(eval KERNEL_SEEK := $(shell echo $$(((`stat -c%s $(LOADER_BIN)` + $(SECTOR_SIZE) - 1) / $(SECTOR_SIZE) + 1))))
 	$(eval KERNEL_SIZE := $(shell stat -c%s $(KERNEL_BIN)))
@@ -131,6 +130,8 @@ $(KERNEL_ASM_OBJ): $(KERNEL_ASM_SRC)
 $(MAINKERNEL_C_OBJ): $(MAINKERNEL_C_SRC) $(KERNEL_H)
 	@echo "Compiling $(MAINKERNEL_C_OBJ)..."
 	$(I686_GCC) -I./src/kernel/include $(CXX_FLAGS) -std=gnu99 -c $(MAINKERNEL_C_SRC) -o $(MAINKERNEL_C_OBJ)
+
+#CLEAN==========================================================================
 
 # Clean Build Directory
 clean:
