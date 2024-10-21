@@ -7,9 +7,8 @@ section .bss
     kernel_checksum_read_buffer resd 0x01
     read_kernel_buffer          resb KERNEL_SIZE
 
-
 section .text
-CalcKernelChecksum:
+CalcKernelCRC32:
     mov esi, read_kernel_buffer
     mov ecx, KERNEL_SIZE
     
@@ -19,7 +18,7 @@ CalcKernelChecksum:
 
     ret
 
-ReadPreBootChecksum:
+ReadPreBootCRC32:
     mov ax, [0x7DFA]
 
     xchg ah, al 
@@ -33,7 +32,7 @@ ReadPreBootChecksum:
 
     ret
 
-CompareChecksums:
+CompareCRC32:
     mov edx, [kernel_checksum_calc_buffer]
     mov ecx, [kernel_checksum_read_buffer]
 

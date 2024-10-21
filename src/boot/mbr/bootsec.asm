@@ -1,4 +1,4 @@
-;Main bootsec
+;Main BootSec
 [BITS 16]
 [ORG 0x7C00]
 
@@ -103,6 +103,7 @@ disk_error_message db "[-][ERROR]: Reading Disk!"                , 0x0D, 0x0A, 0
 
 
 %include "src/boot/print16.asm"
+
 
 times 510-($-$$) db 0x0
 dw 0xAA55

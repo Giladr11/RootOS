@@ -1,4 +1,4 @@
-;Main loader
+;Main Loader
 [ORG 0x7E00]
 [BITS 16]
 
@@ -20,13 +20,13 @@ _start:
 
     call ReadKernel
     
-    call print_start_checksum_message
+    call print_start_crc32_message
 
-    call CalcKernelChecksum
+    call CalcKernelCRC32
 
-    call ReadPreBootChecksum
+    call ReadPreBootCRC32
 
-    call CompareChecksums
+    call CompareCRC32
     
     call LoadKernel
 
@@ -83,7 +83,7 @@ print_press_key:
     
     ret
 
-print_start_checksum_message:
+print_start_crc32_message:
     mov si, checksum_start_msg
     call print
     
@@ -111,12 +111,13 @@ print_disk_error:
 press_load_kernel   db "[INFO] Press 'Enter' to Advance System Initialization..."  , 0x0D, 0x0A, 0x0D, 0x0A, 0
 read_kernel_message db "[+] Accessing Kernel on disk for Integrity Check..."       , 0x0D, 0x0A, 0x0D, 0x0A, 0
 load_kernel_message db "[+] Loading Kernel to RAM..."                              , 0x0D, 0x0A, 0x0D, 0x0A, 0
-checksum_start_msg  db "[+] Initiating Kernel CRC-32 Checksums Verification..."    , 0x0D, 0x0A, 0x0D, 0x0A, 0
+checksum_start_msg  db "[+] Initiating Kernel CRC-32 Verifications..."             , 0x0D, 0x0A, 0x0D, 0x0A, 0
 disk_error_message  db "[-][ERROR]: Reading Disk!"                                 , 0x0D, 0x0A, 0x0D, 0x0A, 0
 
 
 %include "src/boot/stage2/include/crc32_verifier.asm"
 %include "src/boot/stage2/include/initpm.asm"
 %include "src/boot/print16.asm"
+
 
 times 1534-($-$$) db 0x0

@@ -1,8 +1,8 @@
 ;Protected Mode Initialization
-[BITS 16]
+section .data
+    KERNEL_START_ADDR equ 0x100000
 
-KERNEL_START_ADDR equ 0x100000
-
+section .text
 LoadPM:    
     call initA20
 
@@ -60,6 +60,7 @@ print_kernel_exe_msg:
 
 hlting:
     hlt
+
 
 protected_mode_message   db "[+] Transitioning into Protected Mode..." , 0x0D, 0x0A, 0x0D, 0x0A, 0
 setting_gdt_message      db "[+] Setting Up GDT..."                    , 0x0D, 0x0A, 0x0D, 0x0A, 0

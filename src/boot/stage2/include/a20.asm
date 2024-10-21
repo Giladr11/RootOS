@@ -1,6 +1,4 @@
 ;Enabling A20 Line
-[BITS 16]
-
 initA20:
     call A20_enable_msg
 
