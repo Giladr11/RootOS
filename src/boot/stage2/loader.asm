@@ -18,7 +18,7 @@ _start:
 
     call wait_for_key
 
-    call ReadKernel
+    call KernelSectors
     
     call print_start_crc32_message
 
@@ -27,8 +27,6 @@ _start:
     call ReadPreBootCRC32
 
     call CompareCRC32
-    
-    call LoadKernel
 
     jmp LoadPM
 
@@ -41,35 +39,17 @@ wait_for_key:
 
     ret
 
-ReadKernel:
+KernelSectors:
     call print_readkernel_msg
-    
+
     mov ah, 0x02                    
     mov dl, 0x80                    
     mov dh, 0x00                    
     mov ch, 0x00                    
     mov cl, KERNEL_START_SECTOR                    
-    mov al, KERNEL_SECTORS                   
-                                 
-    mov bx, read_kernel_buffer                             
+    mov al, KERNEL_SECTORS                                               
 
-    int 0x13                        
-    
-    jc print_disk_error 
-               
-    ret
-
-LoadKernel:
-    call print_loadkernel_msg
-    
-    mov ah, 0x02                    
-    mov dl, 0x80                    
-    mov dh, 0x00                    
-    mov ch, 0x00                    
-    mov cl, KERNEL_START_SECTOR                    
-    mov al, KERNEL_SECTORS                   
-                                 
-    mov bx, KERNEL_LOAD_SEG                             
+    mov bx, kernel_buffer
 
     int 0x13                        
     
@@ -95,12 +75,6 @@ print_readkernel_msg:
 
     ret
 
-print_loadkernel_msg:
-    mov si, load_kernel_message
-    call print
-
-    ret
-
 print_disk_error:
     mov si, disk_error_message
     call print             
@@ -110,7 +84,6 @@ print_disk_error:
 
 press_load_kernel   db "[INFO] Press 'Enter' to Advance System Initialization..."  , 0x0D, 0x0A, 0x0D, 0x0A, 0
 read_kernel_message db "[+] Accessing Kernel on disk for Integrity Check..."       , 0x0D, 0x0A, 0x0D, 0x0A, 0
-load_kernel_message db "[+] Loading Kernel to RAM..."                              , 0x0D, 0x0A, 0x0D, 0x0A, 0
 checksum_start_msg  db "[+] Initiating Kernel CRC-32 Verifications..."             , 0x0D, 0x0A, 0x0D, 0x0A, 0
 disk_error_message  db "[-][ERROR]: Reading Disk!"                                 , 0x0D, 0x0A, 0x0D, 0x0A, 0
 
