@@ -1,15 +1,11 @@
 ;CRC-32 Verifications
-section .data
-    KERNEL_SIZE equ 5844
-
 section .bss
     kernel_checksum_calc_buffer resd 0x01
     kernel_checksum_read_buffer resd 0x01
-    kernel_buffer               resb KERNEL_SIZE
 
 section .text
 CalcKernelCRC32:
-    mov esi, kernel_buffer
+    mov esi, PHYSICAL_KERNEL_ADDR
     mov ecx, KERNEL_SIZE
     
     call _start_crc32

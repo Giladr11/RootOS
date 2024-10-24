@@ -1,7 +1,4 @@
 ;Protected Mode Initialization
-section .data
-    KERNEL_START_ADDR equ 0x100000
-
 section .text
 LoadPM:    
     call initA20
@@ -12,10 +9,14 @@ LoadPM:
 
     call print_kernel_exe_msg
 
+    call pause
+
+    call SetVideoMode
+
     cli 
 
     lgdt [GDT_DESC]
-    
+
     mov eax, cr0
     or eax, 0x01                 
     mov cr0, eax                
@@ -35,11 +36,35 @@ PModeMain:
     mov fs, ax                      
     mov gs, ax                      
 
-    mov esp, 0x9C00
+    mov esp, 0x9C00 
+
+    mov esi, PHYSICAL_KERNEL_ADDR
+    mov edi, KERNEL_START_ADDR
+    mov ecx, KERNEL_SIZE
+
+    rep movsb
 
     jmp CODE_SEG:KERNEL_START_ADDR
 
 [BITS 16]
+SetVideoMode:
+    mov ax, 0x03
+
+    int 0x10
+
+    ret
+
+pause:
+    mov bx, 0x2FFF            
+outer_loop:
+    mov cx, 0xFFFF          
+inner_loop:
+    loop inner_loop         
+    dec bx                  
+    jnz outer_loop  
+
+    ret
+
 print_setting_gdt:
     mov si,setting_gdt_message
     call print

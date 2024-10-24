@@ -1,6 +1,6 @@
 ;Pre-Boot CRC-32 Calculation
 section .data
-    KERNEL_SIZE equ 5844
+    KERNEL_SIZE equ 613
     STDOUT_RESULT_SIZE equ 0x0A    
 
     kernel_filename db  "build/kernel/kernel.bin", 0

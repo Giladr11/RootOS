@@ -9,16 +9,16 @@ GDT_START:
     dw 0xFFFF                       ; Limit (lower 16 bits) = 0xFFFF (64 KB)
     dw 0x0000                       ; Base (lower 16 bits) = 0 (starting from 0) 
     db 0x00                         ; Base (middle 8 bits) = 0
-    db 10011010b                    ; Access byte: (present, executable, readable, privilege level 0)
-    db 11001111b                    ; Granularity: (limit is in 4 KB pages, 32-bit segment)
+    db 0b10011010                   ; Access byte: (present, executable, readable, privilege level 0)
+    db 0b11001111                   ; Granularity: (limit is in 4 KB pages, 32-bit segment)
     db 0x00                         ; Base (upper 8 bits) = 0
 
     GDT_DATA:
     dw 0xFFFF                       ; Limit (lower 16 bits) = 0xFFFF (64 KB)
     dw 0x0000                       ; Base (lower 16 bits) = 0 (starting from 0) 
     db 0x00                         ; Base (middle 8 bits) = 0
-    db 10010010b                    ; Access byte: (present, writable, readable, privilege level 0)
-    db 11001111b                    ; Granularity: (limit is in 4 KB pages, 32-bit segment)
+    db 0b10010010                   ; Access byte: (present, writable, readable, privilege level 0)
+    db 0b11001111                   ; Granularity: (limit is in 4 KB pages, 32-bit segment)
     db 0x00                         ; Base (upper 8 bits) = 0
 
 GDT_END:

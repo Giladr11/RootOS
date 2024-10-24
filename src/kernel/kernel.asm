@@ -1,11 +1,8 @@
-[BITS 32]                        
-
 global _start
 
 extern kernel_main
 
 _start:
-    call kernel_main
-    jmp $
+    jmp kernel_main
 
 times 512 - ($ - $$) db 0        ; Fill remaining sector space with 0

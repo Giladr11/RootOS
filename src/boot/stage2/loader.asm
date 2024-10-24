@@ -3,9 +3,15 @@
 [BITS 16]
 
 section .data
-    KERNEL_LOAD_SEG     equ 0x1000
-    KERNEL_START_SECTOR equ 0x07
-    KERNEL_SECTORS      equ 0x0C
+    KERNEL_LOAD_SEG      equ 0x1000
+    PHYSICAL_KERNEL_ADDR equ 0x10000
+    KERNEL_START_ADDR    equ 0x100000
+    KERNEL_START_SECTOR  equ 0x06
+    KERNEL_SECTORS       equ 0x02
+    KERNEL_OFFSET        equ 0x00
+    KERNEL_SIZE          equ 613
+
+    KernelPacket:       times 16 db 0
 
 section .text
     global _start
@@ -18,7 +24,7 @@ _start:
 
     call wait_for_key
 
-    call KernelSectors
+    call LBAKernel
     
     call print_start_crc32_message
 
@@ -39,22 +45,24 @@ wait_for_key:
 
     ret
 
-KernelSectors:
-    call print_readkernel_msg
+LBAKernel:
+    mov si, KernelPacket
 
-    mov ah, 0x02                    
-    mov dl, 0x80                    
-    mov dh, 0x00                    
-    mov ch, 0x00                    
-    mov cl, KERNEL_START_SECTOR                    
-    mov al, KERNEL_SECTORS                                               
+    mov word[si]        , 0x10                 
+    mov word[si + 2]    , KERNEL_SECTORS       
 
-    mov bx, kernel_buffer
+    mov word[si + 4]    , KERNEL_OFFSET        
+    mov word[si + 6]    , KERNEL_LOAD_SEG      
 
-    int 0x13                        
+    mov dword[si + 8]   , KERNEL_START_SECTOR  
+    mov dword[si + 12]  , 0x00                 
+
+    mov ah, 0x42                               
     
-    jc print_disk_error 
-               
+    int 0x13
+
+    jc print_disk_error
+
     ret
 
 print_press_key:
@@ -93,4 +101,4 @@ disk_error_message  db "[-][ERROR]: Reading Disk!"                              
 %include "src/boot/print16.asm"
 
 
-times 1534-($-$$) db 0x0
+times 1520-($-$$) db 0x0

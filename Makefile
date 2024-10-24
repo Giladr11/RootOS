@@ -16,7 +16,7 @@ NASM_FLAGS = -f bin
 ## Kernel
 I686_GCC = i686-elf-gcc
 I686_LD = i686-elf-ld
-CXX_FLAGS = -g -ffreestanding -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
+CXX_FLAGS = -m32 -ffreestanding -nostdlib -g -c
 
 # SRC Files:
 # Boot Source File
@@ -35,7 +35,7 @@ CHECKSUMS_VERIFIER_SRC = $(SRC_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/crc
 ## Kernel Source Files:
 KERNEL_ASM_SRC = $(SRC_DIR)/$(KERNEL_DIR)/kernel.asm
 SCRIPT_LINKER = $(SRC_DIR)/$(KERNEL_DIR)/linker.ld
-MAINKERNEL_C_SRC = $(SRC_DIR)/$(KERNEL_DIR)/KernelMain.c
+MAINKERNEL_C_SRC = $(SRC_DIR)/$(KERNEL_DIR)/MainKernel.c
 ###INCLUDE:
 KERNEL_H = $(SRC_DIR)/$(KERNEL_DIR)/$(INCLUDE_DIR)/kernel.h
 
@@ -60,8 +60,8 @@ PREBOOT_CRC32_OBJ = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/preboo
 PREBOOT_CRC32_EXE = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/preboot_crc32_calc.exe
 PREBOOT_CRC32_RESULT = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(CRC-32_DIR)/preboot_crc32_result.bin
 ## Kernel OBJ Files
-MAINKERNEL_C_OBJ = $(BUILD_DIR)/$(KERNEL_DIR)/$(OBJ_DIR)/kernel.o
-KERNEL_ASM_OBJ = $(BUILD_DIR)/$(KERNEL_DIR)/$(OBJ_DIR)/kernel.asm.o
+MAINKERNEL_C_OBJ = $(BUILD_DIR)/$(KERNEL_DIR)/$(OBJ_DIR)/MainKernel.o
+KERNEL_ASM_OBJ = $(BUILD_DIR)/$(KERNEL_DIR)/$(OBJ_DIR)/kernel_asm.o
 LINKED_KERNEL_OBJ = $(BUILD_DIR)/$(KERNEL_DIR)/$(OBJ_DIR)/linkedKernel.o
 KERNEL_BIN = $(BUILD_DIR)/$(KERNEL_DIR)/kernel.bin
 ## Final Disk Image
@@ -111,30 +111,23 @@ $(PREBOOT_CRC32_EXE): $(PREBOOT_CRC32_OBJ)
 
 # Compiling kernel_crc32_calc.o
 $(PREBOOT_CRC32_OBJ): $(PREBOOT_CRC32_SRC)
-	$(NASM_CMD) -f elf32 -g $(PREBOOT_CRC32_SRC) -o $(PREBOOT_CRC32_OBJ)
+	$(NASM_CMD) -f elf32 $(PREBOOT_CRC32_SRC) -o $(PREBOOT_CRC32_OBJ)
 
 
 #KERNEL=COMPILATION=============================================================
 
 # Compiling Final kernel.bin
-$(KERNEL_BIN): $(SCRIPT_LINKER) $(LINKED_KERNEL_OBJ)
+$(KERNEL_BIN): $(SCRIPT_LINKER) $(MAINKERNEL_C_OBJ) $(KERNEL_ASM_OBJ)
 	@echo "Compiling $(KERNEL_BIN)..."
-	$(I686_GCC) $(CXX_FLAGS) -T $(SCRIPT_LINKER) -o $(KERNEL_BIN) -ffreestanding -O0 -nostdlib $(LINKED_KERNEL_OBJ)
+	$(I686_LD) -T $(SCRIPT_LINKER) -o $(KERNEL_BIN) $(KERNEL_ASM_OBJ) $(MAINKERNEL_C_OBJ) 
 
-# Compiling linkedKernel.o 
-$(LINKED_KERNEL_OBJ): $(KERNEL_ASM_OBJ) $(MAINKERNEL_C_OBJ)
-	@echo "Compiling $(LINKED_KERNEL_OBJ)..."
-	$(I686_LD) -g -relocatable $(KERNEL_ASM_OBJ) $(MAINKERNEL_C_OBJ) -o $(LINKED_KERNEL_OBJ)
-
-# Compiling kernel.asm.o
 $(KERNEL_ASM_OBJ): $(KERNEL_ASM_SRC)
 	@echo "Compiling $(KERNEL_ASM_OBJ)..."
-	$(NASM_CMD) -f elf $(KERNEL_ASM_SRC) -o $(KERNEL_ASM_OBJ)
+	$(NASM_CMD) -f elf32 $(KERNEL_ASM_SRC) -o $(KERNEL_ASM_OBJ)
 
-# Compiling kernel.o
-$(MAINKERNEL_C_OBJ): $(MAINKERNEL_C_SRC) $(KERNEL_H)
+$(MAINKERNEL_C_OBJ): $(MAINKERNEL_C_SRC)
 	@echo "Compiling $(MAINKERNEL_C_OBJ)..."
-	$(I686_GCC) -I./src/kernel/include $(CXX_FLAGS) -std=gnu99 -c $(MAINKERNEL_C_SRC) -o $(MAINKERNEL_C_OBJ)
+	$(I686_GCC) $(CXX_FLAGS) $(MAINKERNEL_C_SRC) -o $(MAINKERNEL_C_OBJ)
 
 #CLEAN==========================================================================
 
