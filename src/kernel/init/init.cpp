@@ -1,6 +1,6 @@
-#include "include/kernelMain.h"
 
-void kernel_main() {
+
+extern "C" void kernel_main() {
     char string[18] = {'K', 'e', 'r', 'n', 'e', 'l', ' ', 'i', 's', ' ', 'R', 'u', 'n', 'n', 'i', 'n', 'g', '!'};
 
     int pos = 0;
