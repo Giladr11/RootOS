@@ -5,7 +5,6 @@ BOOT_DIR = boot
 MBR_DIR = mbr
 STAGE2_DIR = stage2
 KERNEL_DIR = kernel
-OBJ_DIR = obj
 INCLUDE_DIR = include
 CRC-32_DIR = crc-32
 MEMORY_DIR = memory
