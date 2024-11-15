@@ -1,6 +1,8 @@
+#include "/mnt/usb/RootOS/src/kernel/include/arch/x86/idt.h"
 
+void kernel_main() {
+    IDT_Initialize();
 
-extern "C" void kernel_main() {
     char string[18] = {'K', 'e', 'r', 'n', 'e', 'l', ' ', 'i', 's', ' ', 'R', 'u', 'n', 'n', 'i', 'n', 'g', '!'};
 
     int pos = 0;

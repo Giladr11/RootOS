@@ -18,20 +18,25 @@ DRIVERS_DIR = drivers
 
 # Compilers:
 ## Boot
-NASM_CMD = nasm
-NASM_FLAGS = -f bin
+NASM = nasm
+NASM_FLAGS_BIN = -f bin
+NASM_FLAGS_OBJ = -f obj
+
 ## Kernel
-I686_GCC = i686-elf-gcc
-I686_LD = i686-elf-ld
-CXX_FLAGS = -m32 -ffreestanding -nostdlib -g -c
+I686_GCC = i686-elf-gcc 
+I686_LD = i686-elf-ld 
+GCC_FLAGS = -m32 -ffreestanding -nostdlib -I. -g -c
 
 # SRC Files:
 # Boot Source File
 PRINT16_SRC = $(SRC_DIR)/$(BOOT_DIR)/print16.asm
+
 ##BOOTSEC
 BOOTSEC_SRC = $(SRC_DIR)/$(BOOT_DIR)/$(MBR_DIR)/bootsec.asm
+
 ##STAGE2
 LOADER_SRC = $(SRC_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/loader.asm
+
 ###INCLUDE
 CRC32_SRC = $(SRC_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/crc32.asm
 PREBOOT_CRC32_SRC = $(SRC_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/preboot_crc32_calc.asm
@@ -39,10 +44,14 @@ GDT_SRC = $(SRC_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/gdt.asm
 A20_SRC = $(SRC_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/a20.asm
 INITPM_SRC = $(SRC_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/initpm.asm
 CHECKSUMS_VERIFIER_SRC = $(SRC_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/crc32_verifier.asm
+
 ## Kernel Source Files:
-KERNEL_ASM_SRC = $(SRC_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/kernel.asm
+INIT_ASM_SRC = $(SRC_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/init.asm
 SCRIPT_LINKER = $(SRC_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/linker.ld
-MAINKERNEL_C_SRC = $(SRC_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/init.cpp
+INIT_C_SRC = $(SRC_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/init.c
+SOURCES_C = $(shell find $(SRC_DIR)/$(KERNEL_DIR) -type f -name "*.c")
+SOURCES_ASM = $(shell find $(SRC_DIR)/$(KERNEL_DIR) -type f -name "*.asm")
+
 
 # Disk Image Commands:
 SECTOR_SIZE = 512  	 		# bytes
@@ -59,16 +68,18 @@ CHECKSUM_COUNT = 4          # 4 blocks of 1 byte
 # Boot Build Files 
 ##BOOTSEC
 BOOTSEC_BIN = $(BUILD_DIR)/$(BOOT_DIR)/$(MBR_DIR)/bootsec.bin
+
 ##STAGE2
 LOADER_BIN = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/loader.bin
 PREBOOT_CRC32_OBJ = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/preboot_crc32_calc.o
-PREBOOT_CRC32_EXE = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/preboot_crc32_calc.exe
+PREBOOT_CRC32_ELF = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(INCLUDE_DIR)/preboot_crc32_calc.elf
 PREBOOT_CRC32_RESULT = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(CRC-32_DIR)/preboot_crc32_result.bin
+
 ## Kernel OBJ Files
-MAINKERNEL_C_OBJ = $(BUILD_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/init.o
-KERNEL_ASM_OBJ = $(BUILD_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/kernel_asm.o
-LINKED_KERNEL_OBJ = $(BUILD_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/linkedKernel.o
 KERNEL_BIN = $(BUILD_DIR)/$(KERNEL_DIR)/kernel.bin
+OBJECTS_C = $(patsubst $(SRC_DIR)/$(KERNEL_DIR)/%.c, $(BUILD_DIR)/$(KERNEL_DIR)/%.o, $(SOURCES_C))
+OBJECTS_ASM = $(patsubst $(SRC_DIR)/$(KERNEL_DIR)/%.asm, $(BUILD_DIR)/$(KERNEL_DIR)/%.o, $(SOURCES_ASM))
+
 ## Final Disk Image
 DISK_IMG = $(BUILD_DIR)/disk.img
 
@@ -103,36 +114,36 @@ $(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE)
 # Compile bootsec.bin
 $(BOOTSEC_BIN): $(BOOTSEC_SRC) $(PRINT16_SRC)
 	@echo "Compiling $(BOOTSEC_BIN)..."
-	$(NASM_CMD) $(NASM_FLAGS) $(BOOTSEC_SRC) -o $(BOOTSEC_BIN)
+	$(NASM) $(NASM_FLAGS_BIN) $(BOOTSEC_SRC) -o $(BOOTSEC_BIN)
 
 # Compile loader.bin
 $(LOADER_BIN): $(LOADER_SRC) $(GDT_SRC) $(A20_SRC) $(INITPM_SRC) $(CRC32_SRC) $(CHECKSUMS_VERIFIER_SRC) $(PRINT16_SRC)
 	@echo "Compiling $(LOADER_BIN)..."
-	$(NASM_CMD) $(NASM_FLAGS) $(LOADER_SRC) -o $(LOADER_BIN)
+	$(NASM) $(NASM_FLAGS_BIN) $(LOADER_SRC) -o $(LOADER_BIN)
 
 # Compiling kernel_crc32_calc.exe
-$(PREBOOT_CRC32_EXE): $(PREBOOT_CRC32_OBJ)
-	ld -m elf_i386 -o $(PREBOOT_CRC32_EXE) $(PREBOOT_CRC32_OBJ)
+$(PREBOOT_CRC32_ELF): $(PREBOOT_CRC32_OBJ)
+	ld -m elf_i386 -o $(PREBOOT_CRC32_ELF) $(PREBOOT_CRC32_OBJ)
 
 # Compiling kernel_crc32_calc.o
 $(PREBOOT_CRC32_OBJ): $(PREBOOT_CRC32_SRC)
-	$(NASM_CMD) -f elf32 $(PREBOOT_CRC32_SRC) -o $(PREBOOT_CRC32_OBJ)
+	$(NASM) -f elf32 $(PREBOOT_CRC32_SRC) -o $(PREBOOT_CRC32_OBJ)
 
 
 #KERNEL=COMPILATION=============================================================
 
 # Compiling Final kernel.bin
-$(KERNEL_BIN): $(SCRIPT_LINKER) $(MAINKERNEL_C_OBJ) $(KERNEL_ASM_OBJ)
+$(KERNEL_BIN): $(SCRIPT_LINKER) $(OBJECTS_ASM) $(OBJECTS_C)
 	@echo "Compiling $(KERNEL_BIN)..."
-	$(I686_LD) -T $(SCRIPT_LINKER) -o $(KERNEL_BIN) $(KERNEL_ASM_OBJ) $(MAINKERNEL_C_OBJ) 
+	$(I686_LD) -T $(SCRIPT_LINKER) -o $(KERNEL_BIN) $(OBJECTS_ASM) $(OBJECTS_C)
 
-$(KERNEL_ASM_OBJ): $(KERNEL_ASM_SRC)
-	@echo "Compiling $(KERNEL_ASM_OBJ)..."
-	$(NASM_CMD) -f elf32 $(KERNEL_ASM_SRC) -o $(KERNEL_ASM_OBJ)
+$(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(I686_GCC) $(GCC_FLAGS) -c $< -o $@
 
-$(MAINKERNEL_C_OBJ): $(MAINKERNEL_C_SRC)
-	@echo "Compiling $(MAINKERNEL_C_OBJ)..."
-	$(I686_GCC) $(CXX_FLAGS) $(MAINKERNEL_C_SRC) -o $(MAINKERNEL_C_OBJ)
+$(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.asm
+	@mkdir -p $(dir $@)
+	$(NASM) -f elf32 $< -o $@
 
 #CLEAN==========================================================================
 

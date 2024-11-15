@@ -22,12 +22,12 @@ echo -e "\n==================================================================\n"
 echo "Building Pre-Boot CRC-32 Calculation ->"   
 echo -e "________________________________________\n"
 
-make build/boot/stage2/include/preboot_crc32_calc.exe
+make build/boot/stage2/include/preboot_crc32_calc.elf
 
 echo -e "\nCalculating Pre-Boot Kernel CRC-32 Checksum ->"
 echo -e "_______________________________________________\n"
 
-RESULT=$(./build/boot/stage2/include/preboot_crc32_calc.exe)
+RESULT=$(./build/boot/stage2/include/preboot_crc32_calc.elf)
  
 echo "Pre-Boot Kernel's CRC-32 Checksum Result: $RESULT"
 
