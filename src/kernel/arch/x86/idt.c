@@ -1,7 +1,7 @@
-#include "/mnt/usb/RootOS/src/kernel/include/arch/x86/idt.h"
-#include "/mnt/usb/RootOS/src/kernel/include/stdint.h"
+#include "include/arch/x86/idt.h"
+#include "include/stdint.h"
 
-IDTEntry g_IDT[IDT_SIZE];
+IDTEntry g_IDT[IDT_ENTRIES];
 
 IDTDesc g_IDTDesc = { sizeof(g_IDT) - 1, g_IDT }; 
 

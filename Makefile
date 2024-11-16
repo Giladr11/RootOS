@@ -25,7 +25,7 @@ NASM_FLAGS_OBJ = -f obj
 ## Kernel
 I686_GCC = i686-elf-gcc 
 I686_LD = i686-elf-ld 
-GCC_FLAGS = -m32 -ffreestanding -nostdlib -I. -g -c
+GCC_FLAGS =  -I/mnt/usb/RootOS/src/kernel -m32 -ffreestanding -nostdlib -g -c
 
 # SRC Files:
 # Boot Source File
@@ -50,6 +50,7 @@ INIT_ASM_SRC = $(SRC_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/init.asm
 SCRIPT_LINKER = $(SRC_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/linker.ld
 INIT_C_SRC = $(SRC_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/init.c
 SOURCES_C = $(shell find $(SRC_DIR)/$(KERNEL_DIR) -type f -name "*.c")
+SOURCES_CPP = $(shell find $(SRC_DIR)/$(KERNEL_DIR) -type f -name "*.cpp")
 SOURCES_ASM = $(shell find $(SRC_DIR)/$(KERNEL_DIR) -type f -name "*.asm")
 
 
@@ -78,6 +79,7 @@ PREBOOT_CRC32_RESULT = $(BUILD_DIR)/$(BOOT_DIR)/$(STAGE2_DIR)/$(CRC-32_DIR)/preb
 ## Kernel OBJ Files
 KERNEL_BIN = $(BUILD_DIR)/$(KERNEL_DIR)/kernel.bin
 OBJECTS_C = $(patsubst $(SRC_DIR)/$(KERNEL_DIR)/%.c, $(BUILD_DIR)/$(KERNEL_DIR)/%.o, $(SOURCES_C))
+OBJECTS_CPP = $(patsubst $(SRC_DIR)/$(KERNEL_DIR)/%.cpp, $(BUILD_DIR)/$(KERNEL_DIR)/%.o, $(SOURCES_CPP))
 OBJECTS_ASM = $(patsubst $(SRC_DIR)/$(KERNEL_DIR)/%.asm, $(BUILD_DIR)/$(KERNEL_DIR)/%.o, $(SOURCES_ASM))
 
 ## Final Disk Image
@@ -133,17 +135,21 @@ $(PREBOOT_CRC32_OBJ): $(PREBOOT_CRC32_SRC)
 #KERNEL=COMPILATION=============================================================
 
 # Compiling Final kernel.bin
-$(KERNEL_BIN): $(SCRIPT_LINKER) $(OBJECTS_ASM) $(OBJECTS_C)
+$(KERNEL_BIN): $(SCRIPT_LINKER) $(OBJECTS_ASM) $(OBJECTS_C) $(OBJECTS_CPP)
 	@echo "Compiling $(KERNEL_BIN)..."
-	$(I686_LD) -T $(SCRIPT_LINKER) -o $(KERNEL_BIN) $(OBJECTS_ASM) $(OBJECTS_C)
+	$(I686_LD) -T $(SCRIPT_LINKER) -o $(KERNEL_BIN) $(OBJECTS_ASM) $(OBJECTS_C) $(OBJECTS_CPP)
 
 $(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.c
 	@mkdir -p $(dir $@)
-	$(I686_GCC) $(GCC_FLAGS) -c $< -o $@
+	$(I686_GCC) -I./mnt/usb/RootOS/src/kernel/include $(GCC_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.asm
 	@mkdir -p $(dir $@)
 	$(NASM) -f elf32 $< -o $@
+
+$(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.cpp
+	@mkdir -p $(dir $@)
+	$(I686_GCC) -I./mnt/usb/RootOS/src/kernel/include $(GCC_FLAGS) -c $< -o $@
 
 #CLEAN==========================================================================
 

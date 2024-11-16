@@ -1,9 +1,9 @@
 #ifndef IDT_H
 #define IDT_H
 
-#include "/mnt/usb/RootOS/src/kernel/include/stdint.h"
+#include "include/stdint.h"
 
-#define IDT_SIZE 256
+#define IDT_ENTRIES 256
 #define FLAG_SET(x, flag) x |= (flag)
 #define FLAG_UNSET(x, flag) x &= ~(flag)
 

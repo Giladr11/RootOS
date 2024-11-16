@@ -1,4 +1,4 @@
-#include "/mnt/usb/RootOS/src/kernel/include/arch/x86/idt.h"
+#include "include/arch/x86/idt.h"
 
 void kernel_main() {
     IDT_Initialize();
