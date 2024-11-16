@@ -140,16 +140,16 @@ $(KERNEL_BIN): $(SCRIPT_LINKER) $(OBJECTS_ASM) $(OBJECTS_C) $(OBJECTS_CPP)
 	$(I686_LD) -T $(SCRIPT_LINKER) -o $(KERNEL_BIN) $(OBJECTS_ASM) $(OBJECTS_C) $(OBJECTS_CPP)
 
 $(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.c
-	@mkdir -p $(dir $@)
-	$(I686_GCC) -I./mnt/usb/RootOS/src/kernel/include $(GCC_FLAGS) -c $< -o $@
+	@echo "Compiling all kernel C files..."
+	$(I686_GCC) $(GCC_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.asm
-	@mkdir -p $(dir $@)
+	@echo "Compiling all kernel ASM files..."
 	$(NASM) -f elf32 $< -o $@
 
 $(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.cpp
-	@mkdir -p $(dir $@)
-	$(I686_GCC) -I./mnt/usb/RootOS/src/kernel/include $(GCC_FLAGS) -c $< -o $@
+	@echo "Compiling all kernel CPP files..."
+	$(I686_GCC) $(GCC_FLAGS) -c $< -o $@
 
 #CLEAN==========================================================================
 
