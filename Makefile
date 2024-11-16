@@ -140,15 +140,15 @@ $(KERNEL_BIN): $(SCRIPT_LINKER) $(OBJECTS_ASM) $(OBJECTS_C) $(OBJECTS_CPP)
 	$(I686_LD) -T $(SCRIPT_LINKER) -o $(KERNEL_BIN) $(OBJECTS_ASM) $(OBJECTS_C) $(OBJECTS_CPP)
 
 $(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.c
-	@echo "Compiling all kernel C files..."
+	@echo "Compiling kernel C files..."
 	$(I686_GCC) $(GCC_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.asm
-	@echo "Compiling all kernel ASM files..."
+	@echo "Compiling kernel ASM files..."
 	$(NASM) -f elf32 $< -o $@
 
 $(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.cpp
-	@echo "Compiling all kernel CPP files..."
+	@echo "Compiling kernel CPP files..."
 	$(I686_GCC) $(GCC_FLAGS) -c $< -o $@
 
 #CLEAN==========================================================================
