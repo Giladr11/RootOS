@@ -33,7 +33,7 @@ void __attribute__((cdecl)) ISR_Handler(Registers* regs)
     }
 
     else {
-        char string1[20] = "Unhandled Interrupt!";
+        char string1[20] = "Unhandled Exception!";
 
         int pos = 0;
         while(pos < 20)

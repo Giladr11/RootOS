@@ -4,7 +4,7 @@
 #include "include/stdint.h"
 
 typedef struct {
-    // in reverse order because the stack grows downwards
+    // In reverse order because the stack grows downwards
 
     uint32_t ds;                                             // data segment is pushed
     uint32_t edi, esi, ebp, kernel_esp, ebx, edx, ecx, eax;  // pusha
