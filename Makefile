@@ -52,7 +52,7 @@ INIT_C_SRC = $(SRC_DIR)/$(KERNEL_DIR)/$(INIT_DIR)/init.c
 SOURCES_C = $(shell find $(SRC_DIR)/$(KERNEL_DIR) -type f -name "*.c")
 SOURCES_CPP = $(shell find $(SRC_DIR)/$(KERNEL_DIR) -type f -name "*.cpp")
 SOURCES_ASM = $(shell find $(SRC_DIR)/$(KERNEL_DIR) -type f -name "*.asm")
-
+KERNEL_INCLUDES = $(shell find $(SRC_DIR)/$(KERNEL_DIR)/$(INCLUDE_DIR) -type f -name "*.h")
 
 # Disk Image Commands:
 SECTOR_SIZE = 512  	 		# bytes
@@ -96,7 +96,7 @@ all: $(DISK_IMG)
 
 #DISK=COMPILATION===============================================================
 
-$(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE)
+$(DISK_IMG): $(BOOTSEC_BIN) $(LOADER_BIN) $(KERNEL_BIN) $(PREBOOT_CRC32_EXE) $(KERNEL_INCLUDES)
 	@echo "Building $(DISK_IMG)..."
 	dd if=$(PREBOOT_CRC32_RESULT) of=$(BOOTSEC_BIN) bs=$(CHECKSUM_SECTOR_SIZE) seek=$(CHECKSUM_SEEK) count=$(CHECKSUM_COUNT) conv=$(CONV)
 
@@ -135,7 +135,7 @@ $(PREBOOT_CRC32_OBJ): $(PREBOOT_CRC32_SRC)
 #KERNEL=COMPILATION=============================================================
 
 # Compiling Final kernel.bin
-$(KERNEL_BIN): $(SCRIPT_LINKER) $(OBJECTS_ASM) $(OBJECTS_C) $(OBJECTS_CPP)
+$(KERNEL_BIN): $(SCRIPT_LINKER) $(OBJECTS_C) $(OBJECTS_ASM) $(OBJECTS_CPP)
 	@echo "Compiling $(KERNEL_BIN)..."
 	$(I686_LD) -T $(SCRIPT_LINKER) -o $(KERNEL_BIN) $(OBJECTS_ASM) $(OBJECTS_C) $(OBJECTS_CPP)
 
@@ -149,7 +149,7 @@ $(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.asm
 
 $(BUILD_DIR)/$(KERNEL_DIR)/%.o: $(SRC_DIR)/$(KERNEL_DIR)/%.cpp
 	@echo "Compiling kernel CPP files..."
-	$(I686_GCC) $(GCC_FLAGS) -c $< -o $@
+	$(I686_GCC) $(GCC_FLAGS) -c $< -o $@	
 
 #CLEAN==========================================================================
 

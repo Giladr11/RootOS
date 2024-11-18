@@ -4,15 +4,6 @@ IDTEntry g_IDT[IDT_ENTRIES];
 
 IDTDesc g_IDTDesc = { sizeof(g_IDT) - 1, g_IDT }; 
 
-void __attribute__((cdecl)) IDT_Load(IDTDesc* idtDesc) {
-    __asm__ volatile (
-        "lidt (%0)"                 // Load the IDT register with the IDT descriptor (base and limit)
-        :       
-        : "r" (idtDesc)             // Input: IDTDesc pointer
-        : "memory"                  // Clobbered: memory (for consistency)
-    );
-}
-
 void IDT_Initialize() {
     IDT_Load(&g_IDTDesc);
 }

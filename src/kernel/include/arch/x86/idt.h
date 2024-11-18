@@ -38,10 +38,10 @@ typedef enum {
 
 } IDT_FLAGS;
 
-extern void __attribute__((cdecl)) IDT_Load(IDTDesc* idtDesc);
-extern void IDT_Initialize(void);
-extern void IDT_EnableGate(int interrupt);
-extern void IDT_DisableGate(int interrupt);
-extern void IDT_SetGate(int interrupt, void* base, uint16_t segmentDesc, uint8_t flags);
+void __attribute__((cdecl)) IDT_Load(IDTDesc* idtDesc);
+void IDT_Initialize(void);
+void IDT_EnableGate(int interrupt);
+void IDT_DisableGate(int interrupt);
+void IDT_SetGate(int interrupt, void* base, uint16_t segmentDesc, uint8_t flags);
 
 #endif
