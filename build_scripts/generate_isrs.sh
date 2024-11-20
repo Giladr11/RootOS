@@ -5,7 +5,7 @@ ISRS_GEN_ASM=$2
 
 ISRS_WITH_ERROR_CODE="8 10 11 12 13 14 17 21"
 
-echo -e "#include \"include/arch/x86/idt.h\"\n" > $ISRS_GEN_C
+echo -e "#include \"include/arch/x86/idt/idt.h\"\n" > $ISRS_GEN_C
 echo -e "#define GDT_CODE_SEGMENT 0x08\n" >> $ISRS_GEN_C
 
 for i in $(seq 0 255); do

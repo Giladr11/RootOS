@@ -1,6 +1,6 @@
-#include "include/arch/x86/isr.h"
-#include "include/arch/x86/idt.h"
-#include "include/arch/x86/cpu_io.h"
+#include "include/arch/x86/isr/isr.h"
+#include "include/arch/x86/idt/idt.h"
+#include "include/arch/x86/cpu/io.h"
 
 ISRHandler g_ISRHandlers[256];
 
@@ -33,12 +33,12 @@ void __attribute__((cdecl)) ISR_Handler(Registers* regs)
     }
 
     else {
-        char string1[20] = "Unhandled Exception!";
+        char string2[20] = "Unhandled Exception!";
 
         int pos = 0;
         while(pos < 20)
         {
-            *((char*)0xb8000 + pos * 2) = string1[pos];        
+            *((char*)0xb8000 + pos * 2) = string2[pos];        
             *((char*)0xb8000 + pos * 2 + 1) = 0x07;    
             pos ++; 
         }   
@@ -54,7 +54,7 @@ void __attribute__((cdecl)) ISR_Handler(Registers* regs)
         // printf("  interrupt=%x  errorcode=%x\n", regs->interrupt, regs->error);
 
         // printf("KERNEL PANIC!\n");
-        clear_int_flag();
+        CLEAR_INT_FLAG();
     }
 }
 

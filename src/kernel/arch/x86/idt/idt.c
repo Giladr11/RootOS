@@ -1,4 +1,4 @@
-#include "include/arch/x86/idt.h"
+#include "include/arch/x86/idt/idt.h"
 
 IDTEntry g_IDT[IDT_ENTRIES];
 

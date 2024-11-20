@@ -1,4 +1,4 @@
-#include "include/arch/x86/idt.h"
+#include "include/arch/x86/idt/idt.h"
 
 #define GDT_CODE_SEGMENT 0x08
 

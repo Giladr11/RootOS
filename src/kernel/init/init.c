@@ -1,12 +1,12 @@
-#include "include/arch/x86/idt.h"
-#include "include/arch/x86/isr.h"
-#include "include/arch/x86/cpu_io.h"
+#include "include/arch/x86/idt/idt.h"
+#include "include/arch/x86/isr/isr.h"
+#include "include/arch/x86/cpu/io.h"
 
 void kernel_main() {
     IDT_Initialize();
     ISR_Initialize();
 
-    set_int_flag();
+    SET_INT_FLAG();
 
     __asm__ volatile ("int $0x2");
 

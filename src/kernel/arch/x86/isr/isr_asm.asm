@@ -22,7 +22,7 @@ ISR%1:
 
 %endmacro
 
-%include "src/kernel/include/arch/x86/isrs_gen.inc"
+%include "src/kernel/include/arch/x86/isr/isrs_gen.inc"
 
 isr_common:
     pusha               ; pushes edi, esi, ebp, esp, ebx, edx, ecx, eax (general purpose regs)

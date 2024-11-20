@@ -18,7 +18,7 @@ echo -e "___________________\n"
 echo "Generating isrs_gens ->"
 echo -e "___________________\n"
 
-./build_scripts/generate_isrs.sh src/kernel/arch/x86/isrs_gen.c src/kernel/include/arch/x86/isrs_gen.inc
+./build_scripts/generate_isrs.sh src/kernel/arch/x86/isr/isrs_gen.c src/kernel/include/arch/x86/isr/isrs_gen.inc
 
 make build/kernel/kernel.bin
 

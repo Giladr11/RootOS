@@ -1,6 +1,6 @@
 [BITS 32]
 
-; Hardware I/O
+; CPU I/O
 
 global outb
 outb:
@@ -16,12 +16,12 @@ inb:
     in al, dx               ; Read data from I/O port in 'dx' into al
     ret
 
-global set_int_flag
-set_int_flag:
+global SET_INT_FLAG
+SET_INT_FLAG:
     sti
     ret
 
-global clear_int_flag
-clear_int_flag:
+global CLEAR_INT_FLAG
+CLEAR_INT_FLAG:
     cli 
     hlt
