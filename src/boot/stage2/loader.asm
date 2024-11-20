@@ -9,7 +9,7 @@ section .data
     KERNEL_START_SECTOR  equ 0x06
     KERNEL_SECTORS       equ 20
     KERNEL_OFFSET        equ 0x00
-    KERNEL_SIZE          equ 10182
+    KERNEL_SIZE          equ 10214
 
     KernelPacket:       times 16 db 0
 

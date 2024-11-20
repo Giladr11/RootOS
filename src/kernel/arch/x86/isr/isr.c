@@ -42,9 +42,10 @@ void __attribute__((cdecl)) ISR_Handler(Registers* regs)
             *((char*)0xb8000 + pos * 2 + 1) = 0x07;    
             pos ++; 
         }   
+        
     }
 
-    // else {
+    else {
         // char string2[20] = "Unhandled Exception!";
 
         // int pos = 0;
@@ -66,7 +67,7 @@ void __attribute__((cdecl)) ISR_Handler(Registers* regs)
         // // printf("  interrupt=%x  errorcode=%x\n", regs->interrupt, regs->error);
 
         // // printf("KERNEL PANIC!\n");
-        // CLEAR_INT_FLAG();
-    //}
+        KERNEL_PANIC();
+    }
 }
 

@@ -10,4 +10,6 @@ void __attribute__((cdecl)) CLEAR_INT_FLAG();
 
 void __attribute__((cdecl)) SET_INT_FLAG();
 
+void __attribute__((cdecl)) KERNEL_PANIC();
+
 #endif
