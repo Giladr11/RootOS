@@ -24,6 +24,7 @@ SET_INT_FLAG:
 global CLEAR_INT_FLAG
 CLEAR_INT_FLAG:
     cli 
+    ret
 
 global KERNEL_PANIC
 KERNEL_PANIC:
